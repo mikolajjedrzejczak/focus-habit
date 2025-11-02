@@ -3,20 +3,35 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "prisma": "dotenv -e .env -- npx prisma"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0"
+    "@prisma/client": "^6.18.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^17.2.3",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^9.0.2",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "prisma": "6.18.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/express": "^5.0.5",
-    "@types/node": "^24.9.2",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.9.3"
+    "@types/bcryptjs": "^2.4.6",
+    "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20.11.20",
+    "@types/passport": "^1.0.17",
+    "@types/passport-jwt": "^4.0.1",
+    "dotenv-cli": "^11.0.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.3.3"
   }
 }
