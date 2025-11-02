@@ -1,5 +1,7 @@
 import './config.js';
 import express from 'express';
+import passport from 'passport';
+import './middleware/passport.middleware.js';
 
 // routes
 import authRoutes from './routes/auth.routes.js';
@@ -8,6 +10,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+app.use(passport.initialize());
 
 app.use('/api/auth', authRoutes);
 
