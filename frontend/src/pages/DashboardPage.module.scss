@@ -1,0 +1,122 @@
+@use '../styles/variables' as var;
+
+.dashboard {
+
+  &__main_content {
+    padding: 1.5rem;
+  }
+
+  &__header {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var.$text-color;
+  }
+}
+
+.create_form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+
+  &__input {
+    flex-grow: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid var.$border-color;
+    border-radius: 8px;
+    font-size: 1rem;
+
+    &:focus {
+      border-color: var.$primary-color;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(var.$primary-color, 0.2);
+    }
+  }
+
+  &__button {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background-color: var.$primary-color;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: var.$primary-color-dark;
+    }
+    &:disabled {
+      background-color: #a0a0a0;
+      opacity: 0.7;
+    }
+  }
+}
+
+.habit_list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background: var.$background-color;
+    padding: 1.25rem;
+    border-radius: var.$border-radius;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  &__name {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var.$text-color;
+    word-break: break-word;
+  }
+
+  &__delete_button {
+    border: none;
+    background: var.$danger-color;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: darken(var.$danger-color, 10%);
+    }
+    &:disabled {
+      background-color: #a0a0a0;
+      opacity: 0.7;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .dashboard {
+    &__main_content {
+      max-width: 800px;
+      margin: 2rem auto;
+    }
+  }
+
+  .create_form {
+    flex-direction: row;
+  }
+
+  .habit_list {
+    &__item {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+}

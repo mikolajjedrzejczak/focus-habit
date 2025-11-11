@@ -8,7 +8,6 @@ interface AuthState {
   isAuth: () => boolean;
   login: (token: string, user: User) => void;
   logout: () => void;
-  setToken: (token: string) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -16,11 +15,9 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       token: null,
       user: null,
-
       isAuth: () => !!get().token,
       login: (token, user) => set({ token, user }),
       logout: () => set({ token: null, user: null }),
-      setToken: (token) => set({ token }),
     }),
     {
       name: 'auth-storage',

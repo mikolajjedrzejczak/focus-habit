@@ -11,7 +11,18 @@ import ProtectedRoute from './components/ProtectedRoute.tsx';
 import DashboardPage from './pages/DashboardPage.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error: any) => {
+        if (error?.response?.status === 401) {
+          return false; 
+        }
+        return failureCount < 3;
+      },
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {

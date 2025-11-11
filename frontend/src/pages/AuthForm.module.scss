@@ -52,6 +52,7 @@
       box-shadow: 0 0 0 3px rgba(var.$primary-color, 0.2);
       background: var.$background-color;
   }
+}
 
   &__button {
     width: 100%; 
@@ -106,7 +107,7 @@
     }
   }
 }
-}
+
 
 @media (min-width: 640px) {
   .authForm {
