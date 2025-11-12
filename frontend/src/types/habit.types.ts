@@ -9,4 +9,5 @@ export interface Habit {
   name: string;
   userId: string;
   createdAt: string;
+  entries: HabitEntry[];
 }

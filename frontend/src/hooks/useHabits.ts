@@ -3,6 +3,7 @@ import {
   getHabitsRequest,
   createHabitRequest,
   deleteHabitRequest,
+  toggleHabitRequest,
 } from '../services/habit.service';
 
 const HABITS_QUERY_KEY = ['habits'];
@@ -30,6 +31,13 @@ export const useHabits = () => {
     },
   });
 
+  const { mutate: toggleHabit, isPending: isTogglingHabit } = useMutation({
+    mutationFn: (habitId: string) => toggleHabitRequest(habitId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: HABITS_QUERY_KEY });
+    },
+  });
+
   const { mutate: deleteHabit, isPending: isDeletingHabit } = useMutation({
     mutationFn: (habitId: string) => deleteHabitRequest(habitId),
     onSuccess: () => {
@@ -43,6 +51,8 @@ export const useHabits = () => {
     habitsError,
     createHabit,
     isCreatingHabit,
+    toggleHabit,
+    isTogglingHabit,
     deleteHabit,
     isDeletingHabit,
   };

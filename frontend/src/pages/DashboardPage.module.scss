@@ -80,6 +80,41 @@
     word-break: break-word;
   }
 
+  &_done {
+      color: var.$text-color-light;
+      text-decoration: line-through;
+    }
+
+  &__actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  &__toggle_button {
+    border: 1px solid var.$primary-color;
+    background: var.$primary-color;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: var.$primary-color-dark;
+    }
+
+    &_done {
+      background: transparent;
+      color: var.$text-color-light;
+      border-color: var.$border-color;
+
+      &:hover {
+        background: #f9fafb;
+      }
+    }
+  }
+
   &__delete_button {
     border: none;
     background: var.$danger-color;

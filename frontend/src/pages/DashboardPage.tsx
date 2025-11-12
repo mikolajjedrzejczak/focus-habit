@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useHabits } from '../hooks/useHabits';
 import { Navbar } from '../layout/Navbar';
 import styles from './DashboardPage.module.scss';
+import { isHabitDoneToday } from '../utils/date.helpers';
 
 const DashboardPage = () => {
   const {
@@ -10,6 +11,8 @@ const DashboardPage = () => {
     habitsError,
     createHabit,
     isCreatingHabit,
+    toggleHabit,
+    isTogglingHabit,
     deleteHabit,
     isDeletingHabit,
   } = useHabits();
@@ -24,7 +27,8 @@ const DashboardPage = () => {
     setNewHabitName('');
   };
 
-  const isOperationPending = isCreatingHabit || isDeletingHabit;
+  const isOperationPending =
+    isCreatingHabit || isTogglingHabit || isDeletingHabit;
 
   return (
     <div className={styles.dashboard}>
@@ -57,18 +61,39 @@ const DashboardPage = () => {
 
         <ul className={styles.habit_list}>
           {habits &&
-            habits.map((habit) => (
-              <li key={habit.id} className={styles.habit_list__item}>
-                <span className={styles.habit_list__name}>{habit.name}</span>
-                <button
-                  onClick={() => deleteHabit(habit.id)}
-                  disabled={isOperationPending}
-                  className={styles.habit_list__delete_button}
-                >
-                  Usuń
-                </button>
-              </li>
-            ))}
+            habits.map((habit) => {
+              const isDone = isHabitDoneToday(habit);
+
+              return (
+                <li key={habit.id} className={styles.habit_list__item}>
+                  <span
+                    className={`${styles.habit_list__name} ${
+                      isDone ? styles.habit_list__name_done : ''
+                    }`}
+                  >
+                    {habit.name}
+                  </span>
+                  <div className={styles.habit_list__actions}>
+                    <button
+                      onClick={() => toggleHabit(habit.id)}
+                      disabled={isOperationPending}
+                      className={`${styles.habit_list__toggle_button} ${
+                        isDone ? styles.habit_list__toggle_button_done : ''
+                      }`}
+                    >
+                      {isDone ? 'Cofnij' : 'Zrobione!'}
+                    </button>
+                    <button
+                      onClick={() => deleteHabit(habit.id)}
+                      disabled={isOperationPending}
+                      className={styles.habit_list__delete_button}
+                    >
+                      Usuń
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
         </ul>
       </main>
     </div>
