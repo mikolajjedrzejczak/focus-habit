@@ -4,7 +4,6 @@ import {
   createHabitRequest,
   deleteHabitRequest,
 } from '../services/habit.service';
-import { useAuthStore } from '../store/auth.store';
 
 const HABITS_QUERY_KEY = ['habits'];
 

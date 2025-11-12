@@ -1,5 +1,5 @@
-import type { LoginBody, RegisterBody, User } from '../types';
 import apiClient from './apiClient';
+import type { LoginBody, RegisterBody, User } from '../types/auth.types';
 
 interface LoginResponse {
   message: string;

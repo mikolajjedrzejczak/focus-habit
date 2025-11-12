@@ -1,5 +1,5 @@
 import apiClient from './apiClient';
-import { type Habit } from '../types';
+import type { Habit } from '../types/habit.types';
 
 interface CreateHabitData {
   name: string;
@@ -14,5 +14,5 @@ export const createHabitRequest = (data: CreateHabitData) => {
 };
 
 export const deleteHabitRequest = (habitId: string) => {
-    return apiClient.delete(`/habits/${habitId}`);
-}
+  return apiClient.delete(`/habits/${habitId}`);
+};
