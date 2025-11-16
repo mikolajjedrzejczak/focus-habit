@@ -34,6 +34,7 @@ export const login = async (req: Request, res: Response) => {
 
     res.status(200).json({
       message: 'Zalogowano pomyślnie!',
+      accessToken: accessToken,
       user: user,
     });
   } catch (err) {
