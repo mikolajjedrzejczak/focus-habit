@@ -1,30 +1,25 @@
 import db from '../db.js';
 import { getTodayDate } from '../utils/date.utils.js';
-import type { CreateHabitBody } from '../validators/habits.validator.js';
+import type { CreateHabitBody } from '../validators/habit.validator.js';
 
-export const findHabitsByUserId = (userId: string) => {
-  return db.habit.findMany({
+export const createHabit = async (userId: string, data: CreateHabitBody) => {
+  const { name, listId } = data;
+
+  const listOwnerCheck = await db.habitList.findFirst({
     where: {
+      id: listId,
       userId: userId,
     },
-    include: {
-      entries: {
-        orderBy: {
-          date: 'desc',
-        },
-      },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
   });
-};
 
-export const createHabit = (userId: string, data: CreateHabitBody) => {
+  if (!listOwnerCheck) {
+    throw new Error('Nie znaleziono listy lub brak uprawnień');
+  }
+
   return db.habit.create({
     data: {
       name: data.name,
-      userId: userId,
+      listId: data.listId,
     },
   });
 };
@@ -33,7 +28,9 @@ export const deleteHabitById = (userId: string, habbitId: string) => {
   return db.habit.deleteMany({
     where: {
       id: habbitId,
-      userId: userId,
+      list: {
+        userId: userId,
+      },
     },
   });
 };
@@ -46,7 +43,9 @@ export const toggleHabitEntry = async (userId: string, habitId: string) => {
       habitId: habitId,
       date: today,
       habit: {
-        userId: userId,
+        list: {
+          userId: userId,
+        },
       },
     },
   });
@@ -61,7 +60,12 @@ export const toggleHabitEntry = async (userId: string, habitId: string) => {
     return { status: 'deleted' };
   } else {
     const habit = await db.habit.findFirst({
-      where: { id: habitId, userId: userId },
+      where: {
+        id: habitId,
+        list: {
+          userId: userId,
+        },
+      },
     });
 
     if (!habit) {
