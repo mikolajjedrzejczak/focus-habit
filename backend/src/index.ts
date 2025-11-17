@@ -1,13 +1,14 @@
 import './config.js';
+import './middleware/passport.middleware.js';
 import express from 'express';
 import passport from 'passport';
 import cors from 'cors';
-import './middleware/passport.middleware.js';
+import cookieParser from 'cookie-parser';
 
 // routes
 import authRoutes from './routes/auth.routes.js';
-import habitRouter from './routes/habit.routes.js';
-import cookieParser from 'cookie-parser';
+import habitRoutes from './routes/habit.routes.js';
+import habitListRoutes from './routes/habitList.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,7 +25,8 @@ app.use(cookieParser());
 app.use(passport.initialize());
 
 app.use('/api/auth', authRoutes);
-app.use('/api/habits', habitRouter);
+app.use('/api/habits', habitRoutes);
+app.use('/api/lists', habitListRoutes);
 
 app.get('/api', (req, res) => {
   res.json({ message: 'test' });

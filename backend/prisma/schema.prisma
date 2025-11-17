@@ -8,11 +8,23 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
-  email    String @unique
-  password String
-
+  id           String  @id @default(uuid())
+  email        String  @unique
+  password     String
   refreshToken String? @unique
+
+  habitLists HabitList[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HabitList {
+  id   String @id @default(uuid())
+  name String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
   habits Habit[]
 
@@ -24,8 +36,8 @@ model Habit {
   id   String @id @default(uuid())
   name String
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
+  list   HabitList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId String
 
   entries HabitEntry[]
 

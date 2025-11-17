@@ -10,7 +10,7 @@ export const register = async (req: Request, res: Response) => {
       return res
         .status(409)
         .json({ message: 'Użytkownik o tym adresie email już istnieje!' });
-    }
+    }   
 
     const newUser = await authService.createUser(req.body);
 
