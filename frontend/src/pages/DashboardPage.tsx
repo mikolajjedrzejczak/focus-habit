@@ -1,72 +1,60 @@
-import { useState } from 'react';
-import { useHabits } from '../hooks/useHabits';
+import { useEffect, useMemo } from 'react';
 import { Navbar } from '../layout/Navbar';
 import styles from './DashboardPage.module.scss';
-import { isHabitDoneToday } from '../utils/date.helpers';
-import HabitCard from '../components/habits/HabitCard';
+import { useHabitLists } from '../hooks/useHabitLists';
+import { useAppStore } from '../store/app.store';
+import Sidebar from '../layout/Sidebar';
+import HabitListContent from '../components/habits/HabitListContent';
+import Backdrop from '../layout/Backdrop';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 const DashboardPage = () => {
-  const {
-    habits,
-    isLoadingHabits,
-    habitsError,
-    createHabit,
-    isCreatingHabit,
-    toggleHabit,
-    isTogglingHabit,
-    deleteHabit,
-    isDeletingHabit,
-  } = useHabits();
+  const { habitLists, isLoadingLists, listsError } = useHabitLists();
 
-  const [newHabitName, setNewHabitName] = useState('');
+  const { selectedListId, setSelectedListId, isSidebarOpen } = useAppStore();
 
-  const handleCreateSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newHabitName.trim()) return;
+  useEffect(() => {
+    if (!selectedListId && habitLists && habitLists.length > 0) {
+      setSelectedListId(habitLists[0].id);
+    }
+  }, [habitLists, selectedListId, setSelectedListId]);
 
-    createHabit(newHabitName);
-    setNewHabitName('');
-  };
+  const selectedList = useMemo(() => {
+    return habitLists?.find((list) => list.id === selectedListId);
+  }, [habitLists, selectedListId]);
 
-  const isOperationPending =
-    isCreatingHabit || isTogglingHabit || isDeletingHabit;
+  if (isLoadingLists) {
+    return (
+      <div className={styles.dashboardPage}>
+        <Navbar />
+        <LoadingSpinner size="lg" variant="centered" />
+      </div>
+    );
+  }
+
+  if (listsError) {
+    return (
+      <div>
+        <Navbar />
+        <p>Błąd ładowania danych.</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.dashboard}>
       <Navbar />
-      <main className={styles.dashboard__main_content}>
-        <h1 className={styles.dashboard__header}>Twój Panel Nawyków</h1>
 
-        <form onSubmit={handleCreateSubmit} className={styles.create_form}>
-          <input
-            type="text"
-            value={newHabitName}
-            onChange={(e) => setNewHabitName(e.target.value)}
-            placeholder="Nowy nawyk (np. 'Pobiegać')"
-            disabled={isCreatingHabit}
-            className={styles.create_form__input}
-          />
-          <button
-            type="submit"
-            disabled={isCreatingHabit}
-            className={styles.create_form__button}
-          >
-            {isCreatingHabit ? 'Dodawanie...' : 'Dodaj'}
-          </button>
-        </form>
+      {isSidebarOpen && <Backdrop />}
 
-        {isLoadingHabits && <p>Ładowanie nawyków...</p>}
-        {habitsError && (
-          <p style={{ color: 'red' }}>Nie udało się załadować nawyków.</p>
-        )}
-
-        <ul className={styles.habit_list}>
-          {habits &&
-            habits.map((habit) => (
-              <HabitCard key={habit.id} habit={habit} />
-            ))}
-        </ul>
-      </main>
+      <div
+        className={`${styles.dashboardLayout} ${
+          isSidebarOpen ? styles.dashboardLayout_sidebarOpen : ''
+        }`}
+      >
+        <Sidebar lists={habitLists || []} isLoading={isLoadingLists} />
+        <HabitListContent list={selectedList} />
+      </div>
     </div>
   );
 };

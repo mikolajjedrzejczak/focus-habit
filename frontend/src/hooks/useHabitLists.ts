@@ -6,7 +6,12 @@ import {
   getHabitListsRequest,
 } from '../services/habitList.service';
 import type { HabitList } from '../types/habit.types';
-import { createHabitRequest, deleteHabitRequest, toggleHabitRequest } from '../services/habit.service';
+import {
+  createHabitRequest,
+  deleteHabitRequest,
+  toggleHabitRequest,
+} from '../services/habit.service';
+import { isHabitDoneToday } from '../utils/date.utils';
 
 const LISTS_QUERY_KEY = ['habitLists'];
 
@@ -41,13 +46,13 @@ export const useHabitLists = () => {
       const previousLists =
         queryClient.getQueryData<HabitList[]>(LISTS_QUERY_KEY);
 
-      queryClient.setQueryData<HabitList[]>(LIST_QUERY_KEYS, (oldData) =>
+      queryClient.setQueryData<HabitList[]>(LISTS_QUERY_KEY, (oldData) =>
         oldData ? oldData.filter((list) => list.id !== deletedListId) : []
       );
 
       return { previousLists };
     },
-    onError: (err, variables, context) => {
+    onError: (_err, _variables, context) => {
       if (context?.previousLists) {
         queryClient.setQueryData(LISTS_QUERY_KEY, context.previousLists);
       }
@@ -58,7 +63,8 @@ export const useHabitLists = () => {
   });
 
   const { mutate: createHabit, isPending: isCreatingHabit } = useMutation({
-    mutationFn: (data: { name: string, listId: string }) => createHabitRequest(data),
+    mutationFn: (data: { name: string; listId: string }) =>
+      createHabitRequest(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: LISTS_QUERY_KEY });
     },
@@ -66,7 +72,24 @@ export const useHabitLists = () => {
 
   const { mutate: deleteHabit, isPending: isDeletingHabit } = useMutation({
     mutationFn: (habitId: string) => deleteHabitRequest(habitId),
-    onSuccess: () => {
+    onMutate: async (deletedHabitId: string) => {
+      await queryClient.cancelQueries({ queryKey: LISTS_QUERY_KEY });
+      const previousLists =
+        queryClient.getQueryData<HabitList[]>(LISTS_QUERY_KEY);
+      queryClient.setQueryData<HabitList[]>(LISTS_QUERY_KEY, (oldLists) => {
+        if (!oldLists) return [];
+        return oldLists.map((list) => ({
+          ...list,
+          habits: list.habits.filter((habit) => habit.id !== deletedHabitId),
+        }));
+      });
+      return { previousLists };
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousLists)
+        queryClient.setQueryData(LISTS_QUERY_KEY, context.previousLists);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: LISTS_QUERY_KEY });
     },
   });
@@ -75,26 +98,42 @@ export const useHabitLists = () => {
     mutationFn: (habitId: string) => toggleHabitRequest(habitId),
     onMutate: async (toggledHabitId: string) => {
       await queryClient.cancelQueries({ queryKey: LISTS_QUERY_KEY });
-      const previousLists = queryClient.getQueryData<HabitList[]>(LISTS_QUERY_KEY);
+      const previousLists =
+        queryClient.getQueryData<HabitList[]>(LISTS_QUERY_KEY);
 
       queryClient.setQueryData<HabitList[]>(LISTS_QUERY_KEY, (oldLists) => {
         if (!oldLists) return [];
-        return oldLists.map(list => ({
+        return oldLists.map((list) => ({
           ...list,
-          habits: list.habits.map(habit => {
+          habits: list.habits.map((habit) => {
             if (habit.id === toggledHabitId) {
-              return { ...habit, name: habit.name + '!' };
+              const isDone = isHabitDoneToday(habit);
+              if (isDone) {
+                const today = new Date().toISOString().split('T')[0];
+                return {
+                  ...habit,
+                  entries: habit.entries.filter(
+                    (e) => e.date.split('T')[0] !== today
+                  ),
+                };
+              } else {
+                const fakeEntry = {
+                  id: Math.random().toString(),
+                  date: new Date().toISOString(),
+                  habitId: habit.id,
+                };
+                return { ...habit, entries: [...habit.entries, fakeEntry] };
+              }
             }
             return habit;
-          })
+          }),
         }));
       });
       return { previousLists };
     },
-    onError: (err, variables, context) => {
-      if (context?.previousLists) {
+    onError: (_err, _variables, context) => {
+      if (context?.previousLists)
         queryClient.setQueryData(LISTS_QUERY_KEY, context.previousLists);
-      }
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: LISTS_QUERY_KEY });

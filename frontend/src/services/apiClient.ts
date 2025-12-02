@@ -47,8 +47,12 @@ apiClient.interceptors.response.use(
     return response;
   },
   async (err) => {
-    const originalRequest = err.config();
+    const originalRequest = err.config;
     const authStore = useAuthStore.getState();
+
+    if (originalRequest.url && originalRequest.url.includes('/refresh')) {
+      return Promise.reject(err);
+    }
 
     if (err.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {

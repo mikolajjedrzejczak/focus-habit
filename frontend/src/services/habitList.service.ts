@@ -14,7 +14,7 @@ export const getHabitListsRequest = () => {
 };
 
 export const createHabitListRequest = (data: CreateListData) => {
-  return apiClient.post<HabitList>('/list', data);
+  return apiClient.post<HabitList>('/lists', data);
 };
 
 export const updateHabitListRequest = (

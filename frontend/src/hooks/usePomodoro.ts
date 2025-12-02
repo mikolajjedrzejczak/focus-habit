@@ -1,23 +1,43 @@
 import { useEffect, useRef, useState } from 'react';
-import { formatTime } from '../utils/date.helpers';
-
-
-const WORK_TIME = 25 * 60; // 25 min
-const SHORT_BREAK_TIME = 5 * 60; // 5 min
-const LONG_BREAK_TIME = 15 * 60; // 15 min
+import { formatTime } from '../utils/date.utils';
+import { useAppStore } from '../store/app.store';
+import { toggleHabitRequest } from '../services/habit.service';
 
 type TimerMode = 'work' | 'shortBreak' | 'longBreak';
 
 export const usePomodoro = () => {
+  const { focusHabitId, setFocusHabitId, timerSettings } = useAppStore();
+
+  const getTimeForMode = (currentMode: TimerMode): number => {
+    switch (currentMode) {
+      case 'work':
+        return timerSettings.work * 60;
+      case 'shortBreak':
+        return timerSettings.shortBreak * 60;
+      case 'longBreak':
+        return timerSettings.longBreak * 60;
+      default:
+        return 25 * 60;
+    }
+  };
+
   const [mode, setMode] = useState<TimerMode>('work');
-  const [secondsLeft, setSecondsLeft] = useState(WORK_TIME);
+  const [secondsLeft, setSecondsLeft] = useState<number>(() =>
+    getTimeForMode('work')
+  );
   const [isActive, setIsActive] = useState(false);
 
   const intervalRef = useRef<number | null>(null);
 
   useEffect(() => {
+    if (!isActive) {
+      setSecondsLeft(getTimeForMode(mode));
+    }
+  }, [timerSettings, mode]);
+
+  useEffect(() => {
     if (isActive) {
-      intervalRef.current = window.setInterval(() => {
+      intervalRef.current = setInterval(() => {
         setSecondsLeft((prevSeconds) => {
           if (prevSeconds <= 1) {
             if (intervalRef.current) {
@@ -25,6 +45,20 @@ export const usePomodoro = () => {
               intervalRef.current = null;
             }
             setIsActive(false);
+
+            const audio = new Audio('/bell.mp3');
+            audio
+              .play()
+              .catch((e) => console.error('Błąd odtwarzania dźwięku:', e));
+
+            if (mode === 'work' && focusHabitId) {
+              toggleHabitRequest(focusHabitId).catch((err) =>
+                console.error('Błąd zapisu Pomodoro:', err)
+              );
+
+              setFocusHabitId(null);
+            }
+
             return 0;
           }
           return prevSeconds - 1;
@@ -37,7 +71,7 @@ export const usePomodoro = () => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isActive]);
+  }, [isActive, mode, focusHabitId]);
 
   const startTimer = () => {
     if (secondsLeft > 0) {
@@ -52,23 +86,12 @@ export const usePomodoro = () => {
   const changeMode = (newMode: TimerMode) => {
     setMode(newMode);
     setIsActive(false);
-
-    switch (newMode) {
-      case 'work':
-        setSecondsLeft(WORK_TIME);
-        break;
-      case 'shortBreak':
-        setSecondsLeft(SHORT_BREAK_TIME);
-        break;
-      case 'longBreak':
-        setSecondsLeft(LONG_BREAK_TIME);
-        break;
-    }
+    setSecondsLeft(getTimeForMode(newMode));
   };
 
   const resetTimer = () => {
     setIsActive(false);
-    changeMode(mode);
+    setSecondsLeft(getTimeForMode(mode));
   };
 
   return {

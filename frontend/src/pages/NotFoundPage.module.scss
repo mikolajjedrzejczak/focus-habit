@@ -1,0 +1,77 @@
+@use "../styles/variables" as var;
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+  background-color: var.$background-color;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+}
+
+.content {
+  max-width: 100%;
+  
+  @media (min-width: 768px) {
+    max-width: 600px;
+  }
+}
+
+.errorCode {
+  font-size: 6rem;
+  font-weight: 900;
+  color: var.$text-color;
+  margin: 0;
+  line-height: 1;
+  opacity: .1;
+
+  @media (min-width: 768px) {
+    font-size: 10rem;
+  }
+}
+
+.title {
+  font-size: 1.5rem;
+  color: var.$text-color;
+  margin-bottom: 1rem;
+  margin-top: -2rem;
+
+  @media (min-width: 768px) {
+    font-size: 2rem;
+    margin-top: -3rem;
+  }
+}
+
+.description {
+  font-size: 1rem;
+  color: lighten(var.$text-color, 20%);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.homeButton {
+  display: inline-block;
+  padding: .75rem 1.5rem;
+  background-color: var.$primary-color-dark;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: background-color .3s ease, transform .2s ease;
+  width: 100%; 
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: var.$primary-color;
+  }
+
+  &:active {
+    transform: scale(.98);
+  }
+
+  @media (min-width: 480px) {
+    width: auto;
+  }
+}

@@ -6,7 +6,6 @@ interface CreateHabitData {
   listId: string;
 }
 
-
 export const createHabitRequest = (data: CreateHabitData) => {
   return apiClient.post<Habit>('/habits', data);
 };

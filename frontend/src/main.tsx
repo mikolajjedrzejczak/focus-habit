@@ -1,10 +1,11 @@
+import './styles/global.scss';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './index.scss';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { PublicRoute } from './components/PublicRoute.tsx';
+import AuthLoader from './components/AuthLoader.tsx';
 
-// pages
 import LoginPage from './pages/LoginPage.tsx';
 import RegisterPage from './pages/RegisterPage.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
@@ -27,12 +28,17 @@ const queryClient = new QueryClient({
 
 const router = createBrowserRouter([
   {
-    path: '/login',
-    element: <LoginPage />,
-  },
-  {
-    path: '/register',
-    element: <RegisterPage />,
+    element: <PublicRoute />,
+    children: [
+      {
+        path: '/login',
+        element: <LoginPage />,
+      },
+      {
+        path: '/register',
+        element: <RegisterPage />,
+      },
+    ],
   },
   {
     path: '/',
@@ -57,7 +63,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <AuthLoader>
+        <RouterProvider router={router} />
+      </AuthLoader>
     </QueryClientProvider>
   </StrictMode>
 );

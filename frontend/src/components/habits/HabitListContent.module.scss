@@ -1,0 +1,41 @@
+@use "../../styles/variables" as var;
+
+.content {
+    padding: 2.5rem;
+    overflow-y: auto;
+    
+    &__header {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var.$text-color;
+    }
+
+    &__addForm {
+        margin-bottom: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var.$border-color;
+    }
+
+    &_empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+        h2 { color: var.$text-color}
+        p { color: var.$text-color-light;}
+    }
+}
+
+.habitList {
+    list-style: none;
+    max-height: 64vh;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    overflow-y: scroll;
+}

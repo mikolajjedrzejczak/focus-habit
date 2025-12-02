@@ -1,157 +1,67 @@
-@use '../styles/variables' as var;
+@use "../styles/variables" as var;
 
 .dashboard {
-
-  &__main_content {
-    padding: 1.5rem;
-  }
-
-  &__header {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    color: var.$text-color;
-  }
-}
-
-.create_form {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-
-  &__input {
-    flex-grow: 1;
-    padding: 0.75rem 1rem;
-    border: 1px solid var.$border-color;
-    border-radius: 8px;
-    font-size: 1rem;
-
-    &:focus {
-      border-color: var.$primary-color;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(var.$primary-color, 0.2);
-    }
-  }
-
-  &__button {
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: 8px;
-    background-color: var.$primary-color;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-
-    &:hover {
-      background-color: var.$primary-color-dark;
-    }
-    &:disabled {
-      background-color: #a0a0a0;
-      opacity: 0.7;
-    }
-  }
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
 }
 
-.habit_list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.dashboardLayout {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 
-  &__item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-    background: var.$background-color;
-    padding: 1.25rem;
-    border-radius: var.$border-radius;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  :global(.sidebar) {
+  width: 100%;
+  flex-shrink: 0;
+  position: absolute;
+  z-index: 10;
+  height: 100%;
+  display: none;
+}
+
+:global(.content) {
+  width: 100%;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+}
+
+
+
+.dashboardLayout_sidebarOpen {
+  
+  & :global(.sidebar) {
+    display: flex !important;
+    width: 80vw;
+    z-index: 20;
   }
 
-  &__name {
-    font-size: 1.125rem;
-    font-weight: 500;
-    color: var.$text-color;
-    word-break: break-word;
-
-    &_done {
-      color: var.$text-color-light;
-      text-decoration: line-through;
-    }
-  }
-
-  &__actions {
-    display: flex;
-    gap: 10px;
-  }
-
-  &__toggle_button {
-    border: 1px solid var.$primary-color;
-    background: var.$primary-color;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-
-    &:hover {
-      background: var.$primary-color-dark;
-    }
-
-    &_done {
-      background: transparent;
-      color: var.$text-color-light;
-      border-color: var.$border-color;
-
-      &:hover {
-        background: #f9fafb;
-      }
-    }
-  }
-
-  &__delete_button {
-    border: none;
-    background: var.$danger-color;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-
-    &:hover {
-      background: darken(var.$danger-color, 10%);
-    }
-    &:disabled {
-      background-color: #a0a0a0;
-      opacity: 0.7;
-    }
+  :global(.content) {
+    display: none;
   }
 }
 
 @media (min-width: 768px) {
-  .dashboard {
-    &__main_content {
-      max-width: 800px;
-      margin: 2rem auto;
-    }
-  }
-
-  .create_form {
+  .dashboardLayout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
     flex-direction: row;
-  }
 
-  .habit_list {
-    &__item {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
+    :global(.sidebar) {
+      display: flex !important;
+      position: relative; 
+      width: 100%;
+      box-shadow: none;
+    }
+
+    :global(.content) {
+      display: block !important;
     }
   }
 }
