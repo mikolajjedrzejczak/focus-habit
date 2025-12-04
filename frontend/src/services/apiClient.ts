@@ -3,7 +3,7 @@ import { useAuthStore } from '../store/auth.store';
 import { refreshRequest } from './auth.service';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: '/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

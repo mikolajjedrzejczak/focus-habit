@@ -16,6 +16,7 @@ frontend/dist/
 backend/dist/
 
 
+
 .env
 .env.*
 !.env.example
