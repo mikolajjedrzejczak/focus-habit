@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "tsx watch src/index.ts",
-    "prisma": "dotenv -e .env -- npx prisma",
+    "start": "node -r dotenv/config --dotenv_config_path=../.env dist/index.js",
+    "dev": "NODE_ENV=development tsx watch --env-file=../.env src/index.ts",
+    "prisma": "dotenv -e ../.env -- npx prisma",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

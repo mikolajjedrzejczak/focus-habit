@@ -1,4 +1,3 @@
-import './config.js';
 import './middleware/passport.middleware.js';
 import express from 'express';
 import passport from 'passport';
