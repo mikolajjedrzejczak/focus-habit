@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import * as habitService from '../services/habit.service.js';
+import * as habitService from '../services/habit.service';
 
 interface AuthenticatedUser {
   id: string;

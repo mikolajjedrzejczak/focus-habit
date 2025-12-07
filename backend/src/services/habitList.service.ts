@@ -1,8 +1,8 @@
-import db from '../db.js';
+import db from '../db';
 import type {
   CreateListBody,
   UpdateListBody,
-} from '../validators/habitList.validator.js';
+} from '../validators/habitList.validator';
 
 export const findListsByUserId = (userId: string) => {
   return db.habitList.findMany({

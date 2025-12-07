@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
-import * as authService from '../services/auth.service.js';
-import { refreshTokenOption } from '../config/cookie.config.js';
+import * as authService from '../services/auth.service';
+import { refreshTokenOption } from '../config/cookie.config';
 
 export const register = async (req: Request, res: Response) => {
   try {

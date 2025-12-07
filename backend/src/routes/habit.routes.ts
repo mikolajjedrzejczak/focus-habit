@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import * as habitController from '../controllers/habit.controller.js';
-import { authenticateJwt } from '../middleware/auth.middleware.js';
-import { validate } from '../middleware/validation.middleware.js';
-import { createHabitSchema } from '../validators/habit.validator.js';
+import * as habitController from '../controllers/habit.controller';
+import { authenticateJwt } from '../middleware/auth.middleware';
+import { validate } from '../middleware/validation.middleware';
+import { createHabitSchema } from '../validators/habit.validator';
 
 const router = Router();
 

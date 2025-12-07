@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
-import db from '../db.js';
-import type { LoginBody, RegisterBody } from '../validators/auth.validator.js';
+import db from '../db';
+import type { LoginBody, RegisterBody } from '../validators/auth.validator';
 import crypto from 'crypto';
-import { generateAccessToken, hashToken } from '../utils/token.utils.js';
+import { generateAccessToken, hashToken } from '../utils/token.utils';
 
 export const findUserByEmail = (email: string) => {
   return db.user.findUnique({

@@ -1,7 +1,7 @@
-import './../config.js';
+import './../config';
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import db from '../db.js';
+import db from '../db';
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

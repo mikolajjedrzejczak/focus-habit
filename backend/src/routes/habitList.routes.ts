@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { authenticateJwt } from '../middleware/auth.middleware.js';
-import * as listController from '../controllers/habitList.controller.js';
-import { validate } from '../middleware/validation.middleware.js';
+import { authenticateJwt } from '../middleware/auth.middleware';
+import * as listController from '../controllers/habitList.controller';
+import { validate } from '../middleware/validation.middleware';
 import {
   createListSchema,
   updateListSchema,
-} from '../validators/habitList.validator.js';
+} from '../validators/habitList.validator';
 
 const router = Router();
 

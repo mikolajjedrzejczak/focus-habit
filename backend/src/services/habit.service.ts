@@ -1,6 +1,6 @@
-import db from '../db.js';
-import { getTodayDate } from '../utils/date.utils.js';
-import type { CreateHabitBody } from '../validators/habit.validator.js';
+import db from '../db';
+import { getTodayDate } from '../utils/date.utils';
+import type { CreateHabitBody } from '../validators/habit.validator';
 
 export const createHabit = async (userId: string, data: CreateHabitBody) => {
   const { name, listId } = data;

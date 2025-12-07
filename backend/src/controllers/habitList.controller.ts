@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import * as listService from '../services/habitList.service.js';
+import * as listService from '../services/habitList.service';
 
 interface AuthenticateUser {
   id: string;
@@ -51,7 +51,7 @@ export const updateList = async (req: Request, res: Response) => {
 
 export const deleteList = async (req: Request, res: Response) => {
   try {
-    const user = req.user as AuthenticateUser;
+    const user = req.user as AuthenticateUser; 
     const listId = req.params.id;
 
     if (!listId) {
